@@ -97,7 +97,7 @@
 
 (defun process_hall_update (data datalen)
     (progn
-        ;(print (str-from-n datalen "process_hall_update: len %d") )
+        ;(print (str-from-n datalen "process_hall_update: len %d"))
         
         ; data looks like:
         ; <bDataLen> <bThrottleLevel> <bBrakeLevel> <bIsUpdatingBLEFW> <bIsBeeping>
@@ -183,11 +183,18 @@
                 (if (= crc ccrc)
                     (progn
                         (if(= bCmd 0x64)
-                            ;(print "dash info request")
+                            ; Command 0x64 is a request from the Dashboard for
+                            ; a Status update, it also includes the current
+                            ; Throttle/Hall sensor data (like 0x65)
+                            ;(print "Command: 0x64")
+                            (process_hall_update data-buf bLen)
                             (send-dash-update)
                         )
 
                         (if(= bCmd 0x65)
+                            ; Command 0x65 is a Throttle/Hall sensor update
+                            ; This command does not expect a reply
+                            ;(print "Command: 0x65")
                             (process_hall_update data-buf bLen)
                         )
                     )
