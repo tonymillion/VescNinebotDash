@@ -49,7 +49,7 @@
 (define fBrakeLowLevel 41.0)
 (define fBrakeHighLevel (- 181.0 fBrakeLowLevel))
 
-(define bShowMPH 0)
+(define bShowMPH 1)
 
 (defun send-dash-update () ;Dash wants information update, 0x64 command
     (progn
