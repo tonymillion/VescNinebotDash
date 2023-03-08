@@ -34,7 +34,8 @@ Right now, the bitfield is configured to hide the (S) (the (S) is used to show e
 The Bitfield is configured to show the (D) option for 'drive' mode and switch the speed display to `mph`
 
 #### general display
-The speed is currently calculated and displayed as MPH, VESC provides the details as meters/sec. Eventually there should be an option to allow display as either km/h or miles/h
+There is a variable at the top of the code called `bShowMPH` setting this to `1` will show the speed in **miles per hour** (what a surprise...), 
+setting it to `0` will show the speed in kilometers per hour and will switch the dashboard so that the km/h lights up.
 
 Battery level is read from the vesc and displayed on the dashboard. The Ninebot dashboard battery display has 5 segments, a solid segment represents 11-20% of charge and a flashing segment represents 0-10% of charge, adding up the segments gives an estimation of charge state
 
