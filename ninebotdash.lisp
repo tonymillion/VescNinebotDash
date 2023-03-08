@@ -49,6 +49,8 @@
 (define fBrakeLowLevel 41.0)
 (define fBrakeHighLevel (- 181.0 fBrakeLowLevel))
 
+(define bShowMPH 0)
+
 (defun send-dash-update () ;Dash wants information update, 0x64 command
     (progn
         (define tx-frame (array-create 15))
@@ -68,24 +70,27 @@
         ;4    16 = off
         ;5    32 = lock
         ;6    64 = 0=show kph / 1 = show mph
-        ;7   128 = ?
-        (setvar 'speed-mode 2)
-        (setvar 'mph-flag 64)
+        ;7   128 = Overheating flag (flashes red thermometer) 
+        (setvar 'speed-mode 4)
+        (setvar 'mph-flag (* 64 bShowMPH))
         (bufset-u8 tx-frame 7 (bitwise-or speed-mode mph-flag))
 
         ;bBattLevel - 0-100 for NB, 0.0-1.0 from vesc
         (bufset-u8 tx-frame 8 (* (get-batt) 100))
 
         ;bHeadlightLevel - lamp status
-        (bufset-u8 tx-frame 9 1)
+        (bufset-u8 tx-frame 9 0)
 
         ;bBeeps - beeper
         (bufset-u8 tx-frame 10 0)
 
         ;bSpeed - current speed, 0.1 kmh units
         ; to convert vesc (meters/sec) to ninebot (mph)
-        (setvar 'mphspeed (to-i32 (* (get-speed) 2.237) ))
-        (bufset-u8 tx-frame 11 mphspeed)
+        (if (= bShowMPH 1)
+            (setvar 'speed (to-i32 (* (get-speed) 2.237) ))
+            (setvar 'speed (to-i32 (* (get-speed) 3.6) )))
+        
+        (bufset-u8 tx-frame 11 speed)
 
         ;bErrorCode - error codes
         (bufset-u8 tx-frame 12 0)
