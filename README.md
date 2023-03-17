@@ -23,7 +23,9 @@ The only way to properly deal with this is to talk about colors from the dashboa
 ```
 ## Software
 
-The script currently listens for commands `0x64` and `0x65` that come from the dashboard, the dashboard sends these packets with a data blob that includes the levels of the hall sensors for both throttle and brake, these packets are decoded (*but not currently used as of now*). The intention is to process this data and convert them to `(set-current-rel)` and `(set-brake-rel)` commands.
+The script currently listens for commands `0x64` and `0x65` that come from the dashboard, the dashboard sends these packets with a data blob that includes the levels of the hall sensors for both throttle and brake, these packets are decoded.
+
+(**Update:**). Thew script now processes this data and convert them to `(set-current-rel)` and `(set-brake-rel)` commands. Theres a slight amount of deadspace added to the bottom end of the range (so your scooter doesn't suddenly decide to go on a short trip around your livingroom thanks to electrical interference). The whole range mapping thing probably needs a little more work and testing with other throttles and brakes to ensure a consistent range is being received from the dashboard.
 
 When a `0x64` packet is received the dashboard expects a reply, the packet contains data that sets the info the dashboard should display, including a bit-field that sets particular properties to display.
 
