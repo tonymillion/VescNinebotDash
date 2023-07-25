@@ -49,6 +49,26 @@
 (define fBrakeLowLevel 41.0)
 (define fBrakeHighLevel (- 181.0 fBrakeLowLevel))
 
+;bFlags field
+;bit, value
+;0    1  = drive
+;1    2  = eco
+;2    4  = sport
+;3    8  = charge
+;4    16 = off
+;5    32 = lock
+;6    64 = 0=show kph / 1 = show mph
+;7   128 = Overheating flag (flashes red thermometer) 
+(define bfDrive     1)
+(define bfEco       2)
+(define bfSport     4)
+(define bfCharge    8)
+(define bfOff       16)
+(define bfLock      32)
+(define bfMPH       64)
+(define bfHWProblem 128)
+
+
 (define bShowMPH 1)
 
 (defun send-dash-update () ;Dash wants information update, 0x64 command
@@ -61,16 +81,6 @@
         (bufset-u8 tx-frame 5 0x64) ;Command (64 in this case)
         (bufset-u8 tx-frame 6 0x00) ;Arg
 
-        ;bFlags field
-        ;bit, value
-        ;0    1  = drive
-        ;1    2  = eco
-        ;2    4  = sport
-        ;3    8  = charge
-        ;4    16 = off
-        ;5    32 = lock
-        ;6    64 = 0=show kph / 1 = show mph
-        ;7   128 = Overheating flag (flashes red thermometer) 
         (setvar 'speed-mode 4)
         (setvar 'mph-flag (* 64 bShowMPH))
         (bufset-u8 tx-frame 7 (bitwise-or speed-mode mph-flag))
